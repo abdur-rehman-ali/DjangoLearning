@@ -12,7 +12,7 @@
       <span>{{ error }}</span>
     {% endfor %}
   {% endif %}
-  <form action="{% url 'student_form' %}" method="POST">
+  <form action="{% url 'student_form' %}" method="POST" novalidate>
     {% csrf_token %}
     {% for field in form %}
      <div>
