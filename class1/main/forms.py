@@ -23,16 +23,34 @@ class StudentForm(forms.Form):
   registration_number = forms.IntegerField()
 
 
-  def clean_first_name(self):
-    first_name = self.cleaned_data.get('first_name')
-    if first_name and len(first_name) < 3:
-      raise forms.ValidationError('Length must be greater than 3')
-    return first_name
+  # def clean_first_name(self):
+  #   first_name = self.cleaned_data.get('first_name')
+  #   if first_name and len(first_name) < 3:
+  #     raise forms.ValidationError('Length must be greater than 3')
+  #   return first_name
 
-  def clean_hobby(self):
-    hobby = self.cleaned_data.get('hobby')
-    if hobby:
-      return hobby
-    else:
-      raise forms.ValidationError('ThiS Field is required')
+  # def clean_hobby(self):
+  #   hobby = self.cleaned_data.get('hobby')
+  #   if hobby:
+  #     return hobby
+  #   else:
+  #     raise forms.ValidationError('ThiS Field is required')
+
+  def clean(self):
+    cleaned_data = super().clean()
+    first_name = cleaned_data.get('first_name')
+    hobby = cleaned_data.get('hobby')
+
+    errors = {}
+    if first_name and len(first_name) < 3:
+      errors['first_name'] = 'Length must be greater than 3'
+
+    if not hobby:
+      errors['hobby'] = 'This field is required'
+
+    if errors:
+      raise forms.ValidationError(errors)
+
+    return cleaned_data      
+
 
