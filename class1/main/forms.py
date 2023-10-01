@@ -1,4 +1,5 @@
 from django import forms
+from django.core import validators
 
 year_choices = (
   ('freshman', 'Freshman'),
@@ -54,3 +55,26 @@ class StudentForm(forms.Form):
     return cleaned_data      
 
 
+def name_should_start_with_a(name):
+  if name[0] != 'a':
+    raise forms.ValidationError('Name must start with a')
+
+class UserForm(forms.Form):
+  name = forms.CharField(
+    error_messages={'required': 'Please enter your name'}
+  )
+  email = forms.EmailField(
+    error_messages={'required': 'Please enter your email'},
+    min_length=2,
+    max_length=50
+  )
+  password = forms.CharField(widget=forms.PasswordInput())
+  confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+  def clean(self):
+    cleaned_data = super().clean()
+    password = self.cleaned_data.get('password')
+    confirm_password = self.cleaned_data.get('confirm_password')
+
+    if password != confirm_password:
+      raise forms.ValidationError("Both password didn't match")

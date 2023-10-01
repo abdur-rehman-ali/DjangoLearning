@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    .field_error{
+      color: red;
+    }
+  </style>
 </head>
 <body>
   <h1>Hello Django FORM</h1>
   {% if form.non_field_errors %}
     {% for error in form.non_field_errors %}
-      <span>{{ error }}</span>
+      <span class="field_error">{{ error }}</span>
     {% endfor %}
   {% endif %}
   <form action="{% url 'student_form' %}" method="POST" novalidate>
@@ -18,7 +23,14 @@
      <div>
       {{ field.label_tag }}
       {{ field }}
-      {{ field.errors }}
+      <p class="field_error">
+        {{ field.errors| striptags }}
+      </p>
+      {% for error in field.errors %}
+        <p class="field_error">
+          {{ error }}
+        </p>
+      {% endfor %}
       <hr>
      </div>
     {% endfor %}
